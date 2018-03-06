@@ -3,3 +3,9 @@
 //
 
 #include "machine.h"
+
+std::ostream& operator<< (std::ostream& stream, const machine& Machine){
+    stream << "Machine ID: " << Machine.getID() << "\n";
+    stream << "Speed: " << Machine.getSpeed();
+    return stream;
+}

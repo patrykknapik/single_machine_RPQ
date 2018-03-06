@@ -3,4 +3,4 @@ project(single_machine_RPQ)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(single_machine_RPQ main.cpp machine.cpp machine.h)
+add_executable(single_machine_RPQ main.cpp machine.cpp machine.h task.cpp task.h)
