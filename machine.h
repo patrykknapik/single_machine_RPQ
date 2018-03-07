@@ -1,6 +1,7 @@
 //
 // Created by Patryk Knapik on 06.03.2018.
 //
+//Not really needed here, created for later projects
 
 #ifndef SINGLE_MACHINE_RPQ_MACHINE_H
 #define SINGLE_MACHINE_RPQ_MACHINE_H
@@ -15,11 +16,11 @@ public:
 
     machine(unsigned int newID, unsigned int newSpeed = 1) : ID(newID), speed(newSpeed) {};
 
-    unsigned int getSpeed() const{
+    unsigned int getSpeed() const {
         return speed;
     }
 
-    unsigned int getID() const{
+    unsigned int getID() const {
         return ID;
     }
 
@@ -32,7 +33,7 @@ public:
     };
 };
 
-std::ostream& operator<< (std::ostream& stream, const machine& Machine);
+std::ostream &operator<<(std::ostream &stream, const machine &Machine);
 
 
 #endif //SINGLE_MACHINE_RPQ_MACHINE_H

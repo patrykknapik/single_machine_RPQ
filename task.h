@@ -15,19 +15,19 @@ public:
     task(unsigned int newID, unsigned int newR = 1, unsigned int newP = 1, unsigned int newQ = 1) : ID(newID), r(newR),
                                                                                                     p(newP), q(newQ) {}
 
-    unsigned int getR() const{
+    unsigned int getR() const {
         return r;
     }
 
-    unsigned int getP() const{
+    unsigned int getP() const {
         return p;
     }
 
-    unsigned int getQ() const{
+    unsigned int getQ() const {
         return q;
     }
 
-    unsigned int getID() const{
+    unsigned int getID() const {
         return ID;
     }
 
@@ -41,13 +41,13 @@ public:
         ID = newID;
     };
 
-    bool operator< (const task &task1) const{
-        return ID<task1.getID();
+    bool operator<(const task &task1) const {
+        return ID < task1.getID();
     }
 
 };
 
-std::ostream& operator<< (std::ostream& stream, const task& Task);
+std::ostream &operator<<(std::ostream &stream, const task &Task);
 
 
 #endif //SINGLE_MACHINE_RPQ_TASK_H
