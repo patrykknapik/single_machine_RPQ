@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <sys/time.h>
-#include "machine.h"
 #include "task.h"
 
 #define TASK_COUNT 5
