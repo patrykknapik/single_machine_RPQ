@@ -5,6 +5,7 @@
 #ifndef SINGLE_MACHINE_RPQ_TASK_H
 #define SINGLE_MACHINE_RPQ_TASK_H
 
+#include <iostream>
 
 class task {
 private:
@@ -40,7 +41,13 @@ public:
         ID = newID;
     };
 
+    bool operator< (const task &task1) const{
+        return ID<task1.getID();
+    }
+
 };
+
+std::ostream& operator<< (std::ostream& stream, const task& Task);
 
 
 #endif //SINGLE_MACHINE_RPQ_TASK_H
