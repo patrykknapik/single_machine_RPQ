@@ -37,6 +37,8 @@ int main() {
         std::cout << *Task << "\n";
     }
 
+    //brute force:
+    std::cout << "\n\nBrute force algorithm:\n";
     gettimeofday(&time_stamp_start, NULL);
     tasksPermutations = factorial(tasks.size());
     std::cout << "\nPermutations(" << tasksPermutations << "):\n";
@@ -49,7 +51,7 @@ int main() {
             t = std::max(Task->getR(), t) + Task->getP();
             Cmax = std::max(Cmax, (t + Task->getQ()));
         }
-        std::cout << "; Cmax = " << Cmax << '\n';
+        std::cout << "; C = " << Cmax << '\n';
 
         if (Cmax < Cmin) {
             Cmin = Cmax;
@@ -69,6 +71,28 @@ int main() {
     elapsed_time = (time_stamp_stop.tv_sec - time_stamp_start.tv_sec) * 1000.0;      // sec to ms
     elapsed_time += (time_stamp_stop.tv_usec - time_stamp_start.tv_usec) / 1000.0;   // us to ms
     std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
+
+
+    //sortR:
+    std::cout << "SortR algorithm:\n";
+    std::cout << "Sugested tasks queue: ";
+    gettimeofday(&time_stamp_start, NULL);
+    std::sort(tasks.begin(),tasks.end(),sortRcomp);
+    for (task *Task : tasks) {
+        std::cout << Task->getID() << ' ';
+        t = std::max(Task->getR(), t) + Task->getP();
+        Cmax = std::max(Cmax, (t + Task->getQ()));
+    }
+    std::cout << "; C = " << Cmax << '\n';
+    gettimeofday(&time_stamp_stop, NULL);
+
+    elapsed_time = (time_stamp_stop.tv_sec - time_stamp_start.tv_sec) * 1000.0;      // sec to ms
+    elapsed_time += (time_stamp_stop.tv_usec - time_stamp_start.tv_usec) / 1000.0;   // us to ms
+    std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
+
+    for (task *Task : tasks) {
+        delete Task;
+    }
 
     return 0;
 }

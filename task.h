@@ -49,5 +49,9 @@ public:
 
 std::ostream &operator<<(std::ostream &stream, const task &Task);
 
+inline bool sortRcomp(const task * task1, const task * task2){
+    return ((task1->getR())<(task2->getR()));
+}
+
 
 #endif //SINGLE_MACHINE_RPQ_TASK_H
