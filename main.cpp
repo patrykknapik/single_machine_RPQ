@@ -1,7 +1,12 @@
 #include <iostream>
 #include <vector>
+#include <sys/time.h>
 #include "machine.h"
 #include "task.h"
+
+#define TASK_COUNT 5
+#define MIN_TIME 1
+#define MAX_TIME 20
 
 unsigned long int factorial(unsigned long int i) {
     unsigned long int f = 1;
@@ -13,21 +18,26 @@ unsigned long int factorial(unsigned long int i) {
 }
 
 int main() {
+    timeval time_stamp_start, time_stamp_stop;
+    double elapsed_time;
     std::vector<task *> tasks;
     std::vector<task *> queuedTasks;
     unsigned long int tasksPermutations = 0;
     unsigned int Cmax = 0, t = 0, Cmin = std::numeric_limits<unsigned int>::max();
+    std::srand(std::time(nullptr));
 
-    tasks.push_back(new task(1, 7, 3, 5));
-    tasks.push_back(new task(2, 1, 8, 2));
-    tasks.push_back(new task(3, 3, 5, 5));
-    tasks.push_back(new task(4, 2, 6, 1));
+    for (unsigned i = 1; i <= TASK_COUNT; ++i) {
+        tasks.push_back(new task(i, (std::rand() % (MAX_TIME - MIN_TIME)) + MIN_TIME,
+                                 (std::rand() % (MAX_TIME - MIN_TIME)) + MIN_TIME,
+                                 (std::rand() % (MAX_TIME - MIN_TIME)) + MIN_TIME));
+    }
 
     std::cout << "Tasks parameters:\n";
     for (task *Task : tasks) {
         std::cout << *Task << "\n";
     }
 
+    gettimeofday(&time_stamp_start, NULL);
     tasksPermutations = factorial(tasks.size());
     std::cout << "\nPermutations(" << tasksPermutations << "):\n";
 
@@ -49,12 +59,16 @@ int main() {
         Cmax = 0;
         t = 0;
     }
+    gettimeofday(&time_stamp_stop, NULL);
 
     std::cout << "\n\nSugested tasks queue: ";
     for (task *Task : queuedTasks) {
         std::cout << Task->getID() << ' ';
     }
     std::cout << "; Cmin = " << Cmin << '\n';
+    elapsed_time = (time_stamp_stop.tv_sec - time_stamp_start.tv_sec) * 1000.0;      // sec to ms
+    elapsed_time += (time_stamp_stop.tv_usec - time_stamp_start.tv_usec) / 1000.0;   // us to ms
+    std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
 
     return 0;
 }
