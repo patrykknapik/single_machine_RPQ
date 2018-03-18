@@ -9,7 +9,7 @@ You may want to change:
 2. Minimal time for step by changing `MIN_TIME`
 3. Maximal time for step by changing `MAX_TIME`
 4. You can save some time by turning off `SHOW_PERMUTATIONS`
-5. I used `GENERATE_TEST_DATA` to generate below tables
+5. I used `GENERATE_TEST_DATA` to generate tables below
 
 ### Test times
 
