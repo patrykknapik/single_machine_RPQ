@@ -13,7 +13,6 @@ You may want to change:
 
 ###Test times
 
-#####Two Machines
 | Number of tasks: |sortR  | make span | Brute force | make span|
 | ------------- |-------------:| -----:| -----:| -----:|
 |2|0.005 ms|37|0.017 ms|37|
