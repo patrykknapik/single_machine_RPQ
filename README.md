@@ -8,7 +8,7 @@ You may want to change:
 1. Number of tasks by changing `TASK_COUNT`
 2. Minimal time for step by changing `MIN_TIME`
 3. Maximal time for step by changing `MAX_TIME`
-4. You can save some time by turning of `SHOW_PERMUTATIONS`
+4. You can save some time by turning off `SHOW_PERMUTATIONS`
 5. I used `GENERATE_TEST_DATA` to generate below tables
 
 ### Test times
