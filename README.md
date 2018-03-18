@@ -11,7 +11,7 @@ You may want to change:
 4. You can save some time by turning of `SHOW_PERMUTATIONS`
 5. I used `GENERATE_TEST_DATA` to generate below tables
 
-##Test times
+### Test times
 
 | Number of tasks: |sortR  | make span | Brute force | make span|
 | ------------- |-------------:| -----:| -----:| -----:|
@@ -27,7 +27,7 @@ You may want to change:
 |11|0.012 ms|136|14976.5 ms|121|
 |12|0.016 ms|140|188554 ms|132|
 
-##Summary
+### Summary
 SortR is not perfect but is significantly faster.
  
 *for SPD lab pt11 on PWR*
