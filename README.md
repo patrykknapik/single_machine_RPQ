@@ -1,5 +1,5 @@
 # README
-Brute force, sortR and schrage algorithm for solving single machine RPQ problem
+Brute force, sortR and schrage (O(n log n) and O(n^2)) algorithm for solving single machine RPQ problem
 
 Tasks are created in loop. Values of R, P and Q are generated randomly for every task.
 Computation time for both algorithms available for comparison.
@@ -13,6 +13,8 @@ You may want to change:
 6. I used `GENERATE_TEST_DATA` to generate tables below
 
 ### Test times
+
+*needs update*
 
 | Number of tasks: |sortR  | make span | Brute force | make span|
 | ------------- |-------------:| -----:| -----:| -----:|
@@ -35,6 +37,8 @@ Example visualisation for three machines (number above arrow represents task ID)
 ![alt text](schrage.svg "RPQ tasks runtime visualisation")
 
 ### Summary
+*needs update*
+
 SortR is not perfect but is significantly faster.
  
 *for SPD lab pt11 on PWR*
