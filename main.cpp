@@ -2,26 +2,29 @@
 #include <vector>
 #include <sys/time.h>
 #include <fstream>
+#include <queue>
+#include <list>
 #include "task.h"
 
-#define TASK_COUNT 13
+#define TASK_COUNT 5
 #define MIN_TIME 1
 #define MAX_TIME 20
-#define SHOW_PERMUTATIONS false
-#define GENRATE_TEST_DATA true
+//#define SHOW_PERMUTATIONS
+//#define GENRATE_TEST_DATA
 
 unsigned long int factorial(unsigned long int i) {
     unsigned long int f = 1;
     while (i != 1) {
-        f *= i;
-        --i;
+        f *= i--;
     }
     return f;
 }
 
+void schrage(std::vector<task *> &unorderedTasks);
+
 int main() {
     timeval time_stamp_start, time_stamp_stop;
-    double elapsed_time, bruteForceTime, sortRTime;
+    double elapsed_time, bruteForceTime, sortRTime, schrageTime;
     std::vector<task *> tasks;
     std::vector<task *> queuedTasks;
     unsigned long int tasksPermutations = 0;
@@ -41,7 +44,7 @@ int main() {
 
     //brute force:
     std::cout << "\n\nBrute force algorithm:\n";
-    if(SHOW_PERMUTATIONS) {
+#ifdef SHOW_PERMUTATIONS
         tasksPermutations = factorial(tasks.size());
         std::cout << "\nPermutations(" << tasksPermutations << "):\n";
 
@@ -63,7 +66,7 @@ int main() {
             Cmax = 0;
             t = 0;
         }
-    }
+#endif
 
     gettimeofday(&time_stamp_start, NULL);
     tasksPermutations = factorial(tasks.size());
@@ -96,6 +99,7 @@ int main() {
     bruteForceTime = elapsed_time;
 
     //sortR:
+    Cmax = t = 0;
     std::cout << "SortR algorithm:\n";
     std::cout << "\nSugested tasks queue: ";
     gettimeofday(&time_stamp_start, NULL);
@@ -113,17 +117,68 @@ int main() {
     std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
     sortRTime = elapsed_time;
 
-    if(GENRATE_TEST_DATA){
+    //schrage:
+    Cmax = t = 0;
+    std::cout << "Schrage algorithm:\n";
+    std::cout << "\nSugested tasks queue: ";
+    gettimeofday(&time_stamp_start, NULL);
+    schrage(tasks);
+    for (task *Task : tasks) {
+        std::cout << Task->getID() << ' ';
+        t = std::max(Task->getR(), t) + Task->getP();
+        Cmax = std::max(Cmax, (t + Task->getQ()));
+    }
+    std::cout << "; C = " << Cmax << '\n';
+    gettimeofday(&time_stamp_stop, NULL);
+
+    elapsed_time = (time_stamp_stop.tv_sec - time_stamp_start.tv_sec) * 1000.0;      // sec to ms
+    elapsed_time += (time_stamp_stop.tv_usec - time_stamp_start.tv_usec) / 1000.0;   // us to ms
+    std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
+    schrageTime = elapsed_time;
+
+#ifdef GENRATE_TEST_DATA
         std::ofstream file;
         file.open("test_data.log",std::ofstream::app);
         file << "|" << TASK_COUNT << "|" << sortRTime << " ms|"<< Cmax;
         file<< "|" << bruteForceTime <<" ms|"<< Cmin << "|\n";
         file.close();
-    }
+#endif
 
     for (task *Task : tasks) {
         delete Task;
     }
 
     return 0;
+}
+
+void schrage(std::vector<task *> &unorderedTasks) {
+    auto sortQ = [](const task *first, const task *second) {
+        return first->getQ() < second->getQ();
+    };
+
+    std::priority_queue<task *, std::vector<task *>, decltype(sortQ)> readyToOrder(sortQ);
+    std::vector<task *> orderedTasks;
+
+    unsigned t = 0;
+    std::sort(unorderedTasks.begin(), unorderedTasks.end(), sortRcomp);
+
+    t = unorderedTasks.at(0)->getR();
+
+    while ((!unorderedTasks.empty()) || (!readyToOrder.empty())) {
+
+        while (!unorderedTasks.empty() && unorderedTasks.at(0)->getR() <= t) {
+            readyToOrder.push(unorderedTasks.at(0));
+            unorderedTasks.erase(unorderedTasks.begin());
+        }
+
+        if (readyToOrder.empty()) {
+            t = unorderedTasks.at(0)->getR();
+        } else {
+            orderedTasks.push_back(readyToOrder.top());
+            readyToOrder.pop();
+            t += orderedTasks.back()->getP();
+        }
+    }
+
+    unorderedTasks = orderedTasks;
 }

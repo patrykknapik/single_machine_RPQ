@@ -1,5 +1,5 @@
 # README
-Brute force and sortR algorithm for solving single machine RPQ problem
+Brute force, sortR and schrage algorithm for solving single machine RPQ problem
 
 Tasks are created in loop. Values of R, P and Q are generated randomly for every task.
 Computation time for both algorithms available for comparison.
