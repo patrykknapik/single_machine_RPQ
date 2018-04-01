@@ -6,10 +6,11 @@
 #include <list>
 #include "task.h"
 
-#define TASK_COUNT 5
+#define TASK_COUNT 3
 #define MIN_TIME 1
 #define MAX_TIME 20
-//#define SHOW_PERMUTATIONS
+#define SHOW_PERMUTATIONS
+#define GENERATE_PLOT
 //#define GENRATE_TEST_DATA
 
 unsigned long int factorial(unsigned long int i) {
@@ -21,6 +22,8 @@ unsigned long int factorial(unsigned long int i) {
 }
 
 void schrage(std::vector<task *> &unorderedTasks);
+
+void generatePlot(std::string &fileName, std::vector<task *> &tasks);
 
 int main() {
     timeval time_stamp_start, time_stamp_stop;
@@ -98,6 +101,12 @@ int main() {
     std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
     bruteForceTime = elapsed_time;
 
+#ifdef GENERATE_PLOT
+    std::string fileName("brute_force.svg");
+    generatePlot(fileName, tasks);
+
+#endif
+
     //sortR:
     Cmax = t = 0;
     std::cout << "SortR algorithm:\n";
@@ -116,6 +125,12 @@ int main() {
     elapsed_time += (time_stamp_stop.tv_usec - time_stamp_start.tv_usec) / 1000.0;   // us to ms
     std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
     sortRTime = elapsed_time;
+
+#ifdef GENERATE_PLOT
+    fileName = "sortR.svg";
+    generatePlot(fileName, tasks);
+
+#endif
 
     //schrage:
     Cmax = t = 0;
@@ -136,6 +151,12 @@ int main() {
     std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
     schrageTime = elapsed_time;
 
+#ifdef GENERATE_PLOT
+    fileName = "schrage.svg";
+    generatePlot(fileName, tasks);
+
+#endif
+
 #ifdef GENRATE_TEST_DATA
         std::ofstream file;
         file.open("test_data.log",std::ofstream::app);
@@ -152,11 +173,11 @@ int main() {
 }
 
 void schrage(std::vector<task *> &unorderedTasks) {
-    auto sortQ = [](const task *first, const task *second) {
+    auto compQ = [](const task *first, const task *second) {
         return first->getQ() < second->getQ();
     };
 
-    std::priority_queue<task *, std::vector<task *>, decltype(sortQ)> readyToOrder(sortQ);
+    std::priority_queue<task *, std::vector<task *>, decltype(compQ)> readyToOrder(compQ);
     std::vector<task *> orderedTasks;
 
     unsigned t = 0;
@@ -182,3 +203,57 @@ void schrage(std::vector<task *> &unorderedTasks) {
 
     unorderedTasks = orderedTasks;
 }
+
+void generatePlot(std::string &fileName, std::vector<task *> &tasks) {
+    std::ofstream file;
+    unsigned int Cmax = 0, t = 0, Rtime = 0, Ptime = 0;
+    std::vector<std::string> colors;
+    colors.push_back("0xFF0000");
+    colors.push_back("0xFFE400");
+    colors.push_back("0x71FF00");
+    colors.push_back("0x00FFE1");
+    colors.push_back("0x0096FF");
+    colors.push_back("0x000FFF");
+    colors.push_back("0xBB00FF");
+    colors.push_back("0xFF00BC");
+    colors.push_back("0xFFAC00");
+    colors.push_back("0x000000");
+
+    auto colorIter = colors.begin();
+
+    file.open("tmp.gpl");
+    file << "set terminal svg size 1000,750\n";
+    file << "set output '" << fileName << "'\n";
+    file << "$DATA << EOD\n";
+
+    for (auto Task : tasks) {
+
+        Ptime = std::max(Task->getR(), Ptime);
+        file << Ptime << " -2 ";
+        Rtime = Ptime - Task->getR();
+        Ptime += Task->getP();
+        file << Task->getP() << " 0 " << (*colorIter) << ' ' << Task->getID() << '\n';
+
+        file << Rtime << " -1 ";
+        file << Task->getR() << " 0 " << (*colorIter) << ' ' << Task->getID() << '\n';
+
+        file << Ptime << " -3 ";
+        file << Task->getQ() << " 0 " << (*colorIter) << ' ' << Task->getID() << '\n';
+
+        t = std::max(Task->getR(), t) + Task->getP();
+        Cmax = std::max(Cmax, (t + Task->getQ()));
+
+        if (++colorIter == colors.end())
+            colorIter = colors.begin();
+    }
+    file << "EOD\n";
+    file << "unset key\n";
+    file << "set xlabel \"time (total makespan: " << Cmax << ")\"\n";
+    file << "set yrange [-4:0]\n";
+    file << "set ytics (\"\" 0,\"R\" -1, \"P\" -2, \"Q\" -3, \"\" -4)\n";
+    file << "plot $DATA using 1:2:3:4:5 with vectors lw 3 lc rgb variable, $DATA using 1:2:6 with labels offset 1,1\n";
+    file << "reset\n";
+    file.close();
+    system("gnuplot tmp.gpl");
+}
+

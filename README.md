@@ -9,7 +9,8 @@ You may want to change:
 2. Minimal time for step by changing `MIN_TIME`
 3. Maximal time for step by changing `MAX_TIME`
 4. You can save some time by turning off `SHOW_PERMUTATIONS`
-5. I used `GENERATE_TEST_DATA` to generate tables below
+5. To `GENERATE_PLOT` You will need `gnuplot`
+6. I used `GENERATE_TEST_DATA` to generate tables below
 
 ### Test times
 
@@ -26,6 +27,12 @@ You may want to change:
 |10|0.012 ms|76|1553.26 ms|59|
 |11|0.012 ms|136|14976.5 ms|121|
 |12|0.016 ms|140|188554 ms|132|
+
+### Visualisation
+I'm using `gnuplot` to visualise chosen task order.
+
+Example visualisation for three machines (number above arrow represents task ID):
+![alt text](schrage.svg "RPQ tasks runtime visualisation")
 
 ### Summary
 SortR is not perfect but is significantly faster.
