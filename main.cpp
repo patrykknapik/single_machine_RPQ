@@ -6,12 +6,13 @@
 #include <list>
 #include "task.h"
 
-#define TASK_COUNT 8
+#define TASK_COUNT 5
 #define MIN_TIME 1
-#define MAX_TIME 20
+#define MAX_TIME 30
 //#define SHOW_PERMUTATIONS
-#define GENERATE_PLOT
+//#define GENERATE_PLOT
 //#define GENRATE_TEST_DATA
+#define USE_BRUTE_FORCE
 
 unsigned long int factorial(unsigned long int i) {
     unsigned long int f = 1;
@@ -47,8 +48,7 @@ int main() {
         std::cout << *Task << "\n";
     }
 
-    //brute force:
-    std::cout << "\n\nBrute force algorithm:\n";
+
 #ifdef SHOW_PERMUTATIONS
         tasksPermutations = factorial(tasks.size());
         std::cout << "\nPermutations(" << tasksPermutations << "):\n";
@@ -73,6 +73,9 @@ int main() {
         }
 #endif
 
+#ifdef USE_BRUTE_FORCE
+    //brute force:
+    std::cout << "\n\nBrute force algorithm:\n";
     gettimeofday(&time_stamp_start, NULL);
     tasksPermutations = factorial(tasks.size());
     for (; tasksPermutations != 0; --tasksPermutations) {
@@ -103,6 +106,8 @@ int main() {
     std::cout << "Computation time: " << elapsed_time << " ms.\n\n\n";
     bruteForceTime = elapsed_time;
     bruteForce_Cmax = Cmin;
+
+#endif
 
 #ifdef GENERATE_PLOT
     std::string fileName("brute_force.svg");
@@ -189,13 +194,23 @@ int main() {
 #endif
 
 #ifdef GENRATE_TEST_DATA
-        std::ofstream file;
-        file.open("test_data.log",std::ofstream::app);
-        file << "|" << TASK_COUNT << "|" << sortRTime << " ms|"<< sortR_Cmax;
-        file<< "|" << bruteForceTime <<" ms|"<< bruteForce_Cmax;
-        file<< "|" << schrageNlogNTime <<" ms|"<< schrageNlogN_Cmax;
-        file<< "|" << schrageN2Time <<" ms|"<< schrageN2_Cmax << "|\n";
-        file.close();
+#ifdef USE_BRUTE_FORCE
+    std::ofstream file;
+    file.open("test_data.log",std::ofstream::app);
+    file << "|" << TASK_COUNT << "|" << sortRTime << "|"<< sortR_Cmax;
+    file<< "|" << bruteForceTime <<"|"<< bruteForce_Cmax;
+    file<< "|" << schrageNlogNTime <<"|"<< schrageNlogN_Cmax;
+    file<< "|" << schrageN2Time <<"|"<< schrageN2_Cmax << "|\n";
+    file.close();
+#else
+std::ofstream file;
+    file.open("test_data.log",std::ofstream::app);
+    file << "|" << TASK_COUNT << "|" << sortRTime << "|"<< sortR_Cmax;
+    file<< "| | ";
+    file<< "|" << schrageNlogNTime <<"|"<< schrageNlogN_Cmax;
+    file<< "|" << schrageN2Time <<"|"<< schrageN2_Cmax << "|\n";
+    file.close();
+#endif
 #endif
 
     for (task *Task : tasks) {
