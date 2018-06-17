@@ -9,27 +9,33 @@
 
 class task {
 private:
-    unsigned int r, p, q, ID;
+    unsigned int r, p, q, startime;
+    int ID;
 
 public:
-    task(unsigned int newID, unsigned int newR = 1, unsigned int newP = 1, unsigned int newQ = 1) : ID(newID), r(newR),
-                                                                                                    p(newP), q(newQ) {}
+    task(int newID, unsigned int newR = 1, unsigned int newP = 1, unsigned int newQ = 1) : ID(newID), r(newR),
+                                                                                           p(newP), q(newQ) {}
 
-    unsigned int getR() const {
+    unsigned int &getR() {
         return r;
     }
 
-    unsigned int getP() const {
+    unsigned int &getP() {
         return p;
     }
 
-    unsigned int getQ() const {
+    unsigned int &getQ() {
         return q;
     }
 
-    unsigned int getID() const {
+    int &getID() {
         return ID;
     }
+
+    unsigned int &getStartTime() {
+        return startime;
+    }
+
 
     void setRPQ(unsigned int newR, unsigned int newP, unsigned int newQ) {
         r = newR;
@@ -37,19 +43,19 @@ public:
         q = newQ;
     }
 
-    void setID(unsigned int newID) {
+    void setID(int newID) {
         ID = newID;
     };
 
-    bool operator<(const task &task1) const {
+    bool operator<(task &task1) {
         return ID < task1.getID();
     }
 
 };
 
-std::ostream &operator<<(std::ostream &stream, const task &Task);
+std::ostream &operator<<(std::ostream &stream, task &Task);
 
-inline bool sortRcomp(const task * task1, const task * task2){
+inline bool sortRcomp(task *task1, task *task2) {
     return ((task1->getR())<(task2->getR()));
 }
 
